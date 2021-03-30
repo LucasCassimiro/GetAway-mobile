@@ -7,6 +7,7 @@ import Main from './pages/Main';
 import Cadastro from './pages/Cadastro';
 import Recuperar from './pages/Recuperar';
 import Mapa from './pages/Mapa';
+import Pesquisar from './pages/Pesquisar';
 
 
 
@@ -42,6 +43,15 @@ const Routes =  createAppContainer(
         Mapa:{
             screen: Mapa,
             navigationOptions: {
+                title: 'Mapa',
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+            },
+        },
+
+        Pesquisar:{
+            screen: Pesquisar,
+            navigationOptions:{
                 title: 'Mapa',
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',

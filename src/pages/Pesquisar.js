@@ -4,7 +4,7 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 
 
-function Mapa ({ navigation }) {
+function Pesquisar ({ navigation }) {
 
     
     const [pesquisar, setPesquisar] = useState('');  
@@ -13,9 +13,9 @@ function Mapa ({ navigation }) {
       navigation.navigate('Main') ;
       }
   
-     const lupa = () => {
-      navigation.navigate('Pesquisar') ;
-      }  
+    const pesq = () => {
+      navigation.navigate('Main') ;
+    }  
 
   return (
     <> 
@@ -38,7 +38,7 @@ function Mapa ({ navigation }) {
         </MapView>
 
          
-        {/* <View style={{ flexDirection:'row', alignItems:'center', bottom: 220}}>    
+        <View style={{ flexDirection:'row', alignItems:'center', bottom: 220}}>    
             <TextInput
               style={styles.input}
               placeholder= "Pesquisar"
@@ -55,11 +55,11 @@ function Mapa ({ navigation }) {
                 }}
                 source= {require('../../assets/lupa.png')}/>
             </TouchableOpacity>
-          </View> */}
+          </View>
 
           <View style={{ flexDirection:'row', 
               position:'absolute', bottom:0,width:'100%', height: 50, backgroundColor:'#ff6b00'}}>              
-            <TouchableOpacity style={styles.menu}>
+            <TouchableOpacity style={styles.menu} >
                   <Image style={{
                     width:40,
                     height:40,
@@ -70,22 +70,11 @@ function Mapa ({ navigation }) {
                 />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.lupa}  onPress={()=>lupa()}>
+              <TouchableOpacity style={styles.novo}>
                   <Image style={{
                     width:40,
                     height:40,
-                    top: 5,
-                    left:275,
-                }}
-                source= {require('../../assets/lupa.png')}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.novo} >
-                  <Image style={{
-                    width:40,
-                    height:40,
-                    left: 80,
+                    left: 120,
                     top: 5,
                 }}
                 source= {require('../../assets/novo.png')}
@@ -156,6 +145,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Mapa;
-
-      
+export default Pesquisar;
