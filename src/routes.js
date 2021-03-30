@@ -11,7 +11,10 @@ import Pesquisar from './pages/Pesquisar';
 import Menu from './pages/Menu';
 import Novo from './pages/Novo';
 import Sair from './pages/Sair';
-
+import Projeto from './pages/Projeto';
+import Ponto from './pages/Ponto';
+import FedPonto from './pages/FedPonto';
+import FedRota from  './pages/FedRota';
 
 const Routes =  createAppContainer(
     createStackNavigator({
@@ -84,6 +87,42 @@ const Routes =  createAppContainer(
                 title: 'Mapa',
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',
+            },
+        },
+
+        Projeto:{
+            screen: Projeto,
+            navigationOptions:{
+                title: 'Projeto', //pegar nome do projeto setProjeto
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+            },
+        },
+
+        Ponto:{
+            screen: Ponto,
+            navigationOptions:{
+              title: 'Projeto', //pegar nome do projeto setProjeto  
+              headerTitleAlign: 'center',
+              headerTintColor: 'white',
+            },
+        },
+
+        FedPonto:{
+            screen: FedPonto,
+            navigationOptions:{
+              title: 'Projeto', //pegar nome do projeto setProjeto  
+              headerTitleAlign: 'center',
+              headerTintColor: 'white',
+            },
+        },
+
+        FedRota:{
+            screen: FedRota,
+            navigationOptions:{
+              title: 'Projeto', //pegar nome do projeto setProjeto  
+              headerTitleAlign: 'center',
+              headerTintColor: 'white',
             },
         },
 

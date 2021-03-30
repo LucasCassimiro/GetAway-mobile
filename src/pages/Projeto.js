@@ -4,18 +4,19 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 
 
-function Novo ({ navigation }) {
+
+function Projeto ({ navigation }) {
 
     
-    const [projeto, setProjeto] = useState('');  
+    // const [projeto, setProjeto] = useState('');  
 
-    const cancelar = () => {
-      navigation.navigate('Mapa') ;
+    const rota = () => {
+      navigation.navigate('FedRota') ;
       }
   
-    const iniciar = () => {
-      navigation.navigate('Projeto') ;
-    }
+     const ponto = () => {
+      navigation.navigate('Ponto') ;
+      }  
 
   return (
     <> 
@@ -36,49 +37,14 @@ function Novo ({ navigation }) {
           }}
           >
         </MapView>
-
-
-        <View style={{ flexDirection:'column', 
-              position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>              
-             <TextInput
-              style={styles.project}
-              placeholder= "Nome do projeto"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setProjeto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
-              />
-            
-            <View style={{flexDirection: 'row', marginTop:70}}>
-            <TouchableOpacity onPress={()=>cancelar()}
-                style={{backgroundColor:'#3a3a3a', 
-                        width:114,
-                        height:36,
-                        borderRadius:4,
-                        right:10
-                        }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
-             </TouchableOpacity>
-
-             <TouchableOpacity onPress={()=>iniciar()}
-                style={{backgroundColor:'#FF6B00', 
-                        width:114,
-                        height:36,
-                        borderRadius:4,
-                        left:10,
-                        }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Iniciar</Text>
-             </TouchableOpacity>
-            </View>
-             
-          </View> 
-
-
+ 
 
         <View style={{ alignItems:'center', flexDirection:'row', width:'100%'}}>
-            <TouchableOpacity style={styles.finalizar}>
+            <TouchableOpacity onPress={()=>rota()} style={styles.finalizar}>
                 <Text style={{color:'white', fontSize: 15, top:12}}>Finalizar rota</Text>
             </TouchableOpacity>
   
-            <TouchableOpacity style={styles.adicionar}>
+            <TouchableOpacity onPress={()=>ponto()} style={styles.adicionar}>
                 <Text style={{color:'white', fontSize: 15, top:12}}>Adicionar Ponto</Text>
             </TouchableOpacity>
         </View>  
@@ -179,4 +145,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Novo;
+export default Projeto;

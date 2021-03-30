@@ -4,18 +4,20 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 
 
-function Novo ({ navigation }) {
+function Ponto ({ navigation }) {
 
     
-    const [projeto, setProjeto] = useState('');  
+    const [ponto, setPonto] = useState('');  
+    const [descricao, setDescricao] = useState('');  
+
 
     const cancelar = () => {
-      navigation.navigate('Mapa') ;
+      navigation.navigate('Projeto') ;
       }
   
-    const iniciar = () => {
-      navigation.navigate('Projeto') ;
-    }
+     const salvaPonto = () => {
+      navigation.navigate('FedPonto') ;
+      }  
 
   return (
     <> 
@@ -36,18 +38,34 @@ function Novo ({ navigation }) {
           }}
           >
         </MapView>
+ 
 
 
-        <View style={{ flexDirection:'column', 
-              position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>              
+        <View style={{ 
+              flexDirection:'column', 
+              position:'absolute', 
+              bottom:229,
+              width:280, 
+              height: 270, 
+              backgroundColor:'white', 
+              alignItems:'center',
+              borderRadius:4,
+              }}>              
              <TextInput
               style={styles.project}
-              placeholder= "Nome do projeto"
+              placeholder= "Nome do ponto"
               autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setProjeto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              onChangeText={text=>setPonto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              />
+
+            <TextInput
+              style={styles.descricao}
+              placeholder= "Descrição"
+              autoCorrect= {false} // desativar o corretor no momento da digitação
+              onChangeText={text=>setDescricao(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
               />
             
-            <View style={{flexDirection: 'row', marginTop:70}}>
+            <View style={{flexDirection: 'row', marginTop:30}}>
             <TouchableOpacity onPress={()=>cancelar()}
                 style={{backgroundColor:'#3a3a3a', 
                         width:114,
@@ -58,20 +76,18 @@ function Novo ({ navigation }) {
                  <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
              </TouchableOpacity>
 
-             <TouchableOpacity onPress={()=>iniciar()}
+             <TouchableOpacity onPress={()=>salvaPonto()}
                 style={{backgroundColor:'#FF6B00', 
                         width:114,
                         height:36,
                         borderRadius:4,
                         left:10,
                         }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Iniciar</Text>
+                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Salvar</Text>
              </TouchableOpacity>
             </View>
              
           </View> 
-
-
 
         <View style={{ alignItems:'center', flexDirection:'row', width:'100%'}}>
             <TouchableOpacity style={styles.finalizar}>
@@ -110,10 +126,25 @@ const styles = StyleSheet.create({
   
   project: {
       backgroundColor: '#EBEBEB',
-      width: 208,
+      width: 240,
       height:36,
-      marginTop: 15,
+      marginTop: 5,
       marginBottom: 15,
+      color: '#9E9E9E', 
+      fontSize: 15,
+      borderRadius: 7,
+      padding:10,
+      shadowOpacity:70,
+      textAlign: 'center',
+      top: 20,  
+   },
+
+   descricao:{
+    backgroundColor: '#EBEBEB',
+      width: 240,
+      height:120,
+      
+      marginBottom: 10,
       color: '#9E9E9E', 
       fontSize: 15,
       borderRadius: 7,
@@ -179,4 +210,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Novo;
+export default Ponto;

@@ -42,7 +42,7 @@ function Sair ({ navigation }) {
               position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>              
              
              <Text style={{color:'#9C9C9C', fontSize:20, textAlign:'center', top:30}}>
-                Tem certeza que desseja sair dessa conta ?
+                Tem certeza que deseja sair dessa conta ?
              </Text>
             
             <View style={{flexDirection: 'row', marginTop:70}}>
