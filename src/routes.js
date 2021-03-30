@@ -8,7 +8,9 @@ import Cadastro from './pages/Cadastro';
 import Recuperar from './pages/Recuperar';
 import Mapa from './pages/Mapa';
 import Pesquisar from './pages/Pesquisar';
-
+import Menu from './pages/Menu';
+import Novo from './pages/Novo';
+import Sair from './pages/Sair';
 
 
 const Routes =  createAppContainer(
@@ -51,6 +53,33 @@ const Routes =  createAppContainer(
 
         Pesquisar:{
             screen: Pesquisar,
+            navigationOptions:{
+                title: 'Mapa',
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+            },
+        },
+
+        Menu:{
+            screen: Menu,
+            navigationOptions:{
+                title: 'Mapa',
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+            },
+        },
+
+        Novo:{
+            screen: Novo,
+            navigationOptions:{
+                title: 'Mapa',
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+            },
+        },
+
+        Sair:{
+            screen: Sair,
             navigationOptions:{
                 title: 'Mapa',
                 headerTitleAlign: 'center',

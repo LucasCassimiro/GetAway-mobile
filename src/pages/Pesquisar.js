@@ -38,7 +38,7 @@ function Pesquisar ({ navigation }) {
         </MapView>
 
          
-        <View style={{ flexDirection:'row', alignItems:'center', bottom: 220}}>    
+        <View style={{ flexDirection:'row', alignItems:'center', bottom: 230}}>    
             <TextInput
               style={styles.input}
               placeholder= "Pesquisar"

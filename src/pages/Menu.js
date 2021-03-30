@@ -4,22 +4,18 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 
 
-function Mapa ({ navigation }) {
+function Menu ({ navigation }) {
 
     
     const [pesquisar, setPesquisar] = useState('');  
 
-    const menu = () => {
-      navigation.navigate('Menu') ;
+    const sair = () => {
+      navigation.navigate('Sair') ;
       }
   
      const lupa = () => {
       navigation.navigate('Pesquisar') ;
       }  
-
-    const novo = () => {
-      navigation.navigate('Novo');
-      }
 
   return (
     <> 
@@ -41,41 +37,20 @@ function Mapa ({ navigation }) {
           >
         </MapView>
 
-          <View style={{ flexDirection:'row', 
-              position:'absolute', bottom:0,width:'100%', height: 50, backgroundColor:'#ff6b00'}}>              
+          <View style={{ flexDirection:'column', 
+              position:'absolute', bottom:0,width:'100%', height: 190, backgroundColor:'white'}}>              
             
-              <TouchableOpacity style={styles.menu} onPress={()=>menu()}>
-                  <Image style={{
-                    width:40,
-                    height:40,
-                    top: 5,
-                    left:10,
-                  
-                }}
-                source= {require('../../assets/menu.png')}
-                />
-              </TouchableOpacity>
-                
-              <TouchableOpacity style={styles.lupa} onPress={()=>lupa()}>
-                  <Image style={{
-                    width:40,
-                    height:40,
-                    top: 5, 
-                }}
-                source= {require('../../assets/lupa.png')}
-                />
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.novo} onPress={()=>novo()}>
-                  <Image style={{
-                    width:40,
-                    height:40,
-                    top: 5,
-                }}
-                source= {require('../../assets/novo.png')}
-                />
-              </TouchableOpacity>
-                
+             <TouchableOpacity style={styles.ver}>
+                 <Text style={{color:'#9E9E9E', fontSize:20, textAlign:'center'}}>Ver projetos</Text>
+             </TouchableOpacity>
+
+             <TouchableOpacity style={styles.sair} onPress={()=>sair()}>
+                 <Text style={{color:'#9E9E9E', fontSize:20, textAlign:'center'}}>Sair da conta</Text>
+             </TouchableOpacity>
+
+             <TouchableOpacity style={styles.excluir}>
+                 <Text style={{color:'#FF0000', fontSize:20, textAlign:'center'}}>Exlcuir conta</Text>
+             </TouchableOpacity>
           </View> 
          
       </View>
@@ -147,11 +122,28 @@ const styles = StyleSheet.create({
      width:40,
      height:40,
      left: 80,
-     
-   }
+   }, 
 
+   ver: {
+       width:'100%',
+       height:48,
+       alignContent:'center',
+       top: 15,
+   },
+
+   sair: {
+    width:'100%',
+       height:48,
+       alignContent:'center',
+       top: 15,
+   },
+
+   excluir: {
+    width:'100%',
+    height:48,
+    alignContent:'center',
+    top: 30,
+   },
 })
 
-export default Mapa;
-
-      
+export default Menu;
