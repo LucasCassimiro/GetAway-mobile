@@ -1,49 +1,66 @@
-import React, {useState} from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component } from 'react';
+import { View, KeyboardAvoidingView, Image, TextInput, 
+  TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
+import useLocation from '../Hooks/useLocation';
+import Geolocation from 'react-native-geolocation-service';
 
 
 export default function MenuProjeto ({navigation}) {
 
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+  const [latitude, setLatitude] = useState(-20.3866452);	
+  const [longitude, setLongitude] = useState(-43.5033303);
+    // const [projeto, setProjeto] = useState('');  
+    const { coords, errorMsg } = useLocation();
   
-    const projeto = () => {
-      alert('Ir para página do projeto');
+    async function deleteProject (){
+      const response = await api.delete('project', {
+        firebaseID,
+        projectID,
+      });
+  
+      setProject([...project,response.data])
+      alert('Projeto excluido com sucesso!')
+      navigation.navigate('Mapa');
     }
 
     const editar = () => {
        navigation.navigate('EditProj');
     }
 
-    const excluir = () => {
-        alert('Tem certeza que deseja excluir o projeto?');
-    }
+
 
   return (
       <KeyboardAvoidingView style={styles.background} >
 
       <View style={styles.container}>
 
+                            
       <MapView
-         style={styles.map}
-         loadingEnabled={true}
-         region={{
-         latitude: -20.3868374,
-         longitude: -43.5037862,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-          }}
-          >
-        </MapView>
+              showsUserLocation={true}		//destacando a localização do usuário no mapa
+     	 showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
+              toolbarEnabled={false}	//ocultando opções do google maps ao clicar em objetos do mapa
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',		
+              }}	// Fazendo com que o mapa ocupe a tela inteira
+              initialRegion={{
+                latitude,	//posição inicial do mapa
+                longitude,	//posição inicial do mapa
+                latitudeDelta: 0.015,  	//determina o zoom do mapa
+                longitudeDelta: 0.0121,	//determina o zoom do mapa
+                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+              }}
+            />
        
 
              <TouchableOpacity style={styles.editar} onPress={()=>editar()}>
                  <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Editar</Text>
              </TouchableOpacity>
 
-             <TouchableOpacity style={styles.excluirPro} onPress={()=>excluir()}>
+             <TouchableOpacity style={styles.excluirPro} onPress={deleteProject}>
                  <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Exlcuir Projeto</Text>
              </TouchableOpacity>
           </View> 
@@ -84,8 +101,7 @@ const styles = StyleSheet.create({
       backgroundColor:'#129BE8',
       width:200,
       height:30,
-      bottom:0,
-      top: 230,
+      top:'42%',
       borderRadius:4,
   },
 
@@ -93,8 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor:'red',
         width:200,
         height:30,
-        top: 240,
-        bottom:0,
+        top: '43%',
         borderRadius:4,
   }
 })

@@ -2,45 +2,41 @@ import React, {useState, useEffect , Component } from 'react';
 import { View, KeyboardAvoidingView, Image, TextInput, 
   TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
-import { color } from 'react-native-reanimated';
+import { color, set } from 'react-native-reanimated';
 import useLocation from '../Hooks/useLocation';
 import Geolocation from 'react-native-geolocation-service';
+import api from '../Services/api';
 
-
-function Ponto ({ navigation }) {
+function NovaRota ({ navigation }) {
 
   const [latitude, setLatitude] = useState(-20.3866452);	
   const [longitude, setLongitude] = useState(-43.5033303);
-    // const [projeto, setProjeto] = useState('');  
-    const { coords, errorMsg } = useLocation([]);
-    const [point, setPoint] = useState('');  
-    const [description, setDescription] = useState('');  
+     
+    const { coords, errorMsg } = useLocation();
+    
+    const [path, setPath] = useState('');  
+    
 
-    async function handleAddPoint (){
-      var response = await api.post('point', {
-        name: point,
-        description: description,
-        Coordinates: coords,
-      });
-  
-      setPoint([...point,response.data])
-      navigation.navigate('FedPonto') ;
-    } 
+   async function handleAddPath (){
+    const response = await api.post('path', {
+      name: path,
+      points: coords
+ });
 
-    const cancelar = () => {
-      navigation.navigate('Rota') ;
-      }
-  
+   setPath([...path,response.data])
+   navigation.navigate('Rota') ;
+ }
 
   return (
     <> 
-    <KeyboardAvoidingView style={styles.background}
-      behavior='height'
+    <KeyboardAvoidingView style={styles.background} 
+    behavior='height'
     >
  
 
       <View style={styles.container}>
             
+                      
       <MapView
               showsUserLocation={true}		//destacando a localização do usuário no mapa
      	 showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
@@ -58,33 +54,16 @@ function Ponto ({ navigation }) {
                 ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
               }}
             />
- 
 
 
-        <View style={{ 
-              flexDirection:'column', 
-              position:'absolute', 
-              bottom:110,
-              width:280, 
-              height: 230, 
-              backgroundColor:'white', 
-              alignItems:'center',
-              borderRadius:4,
-              }}>              
+        <View style={{ flexDirection:'column', 
+              position:'absolute', bottom:200,width:270, height: 100, backgroundColor:'white', alignItems:'center', borderRadius:4,}}>              
              <TextInput
               style={styles.project}
-              value={point}
-              placeholder= "Nome do ponto"
+              placeholder= "Nome da rota" 
+              value = {path}
               autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={setPoint} // salvar essa info em algum local. Pesquisar para saber mais sobre.
-              />
-
-            <TextInput
-              style={styles.descricao}
-              placeholder= "Descrição"
-              value={description}
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={setDescription} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              onChangeText={setPath} // salvar essa info em algum local. Pesquisar para saber mais sobre.
               />
             
             <View style={{flexDirection: 'row', marginTop:10}}>
@@ -98,18 +77,20 @@ function Ponto ({ navigation }) {
                  <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
              </TouchableOpacity>
 
-             <TouchableOpacity onPress={handleAddPoint}
+             <TouchableOpacity onPress={handleAddPath}
                 style={{backgroundColor:'#FF6B00', 
                         width:114,
                         height:36,
                         borderRadius:4,
                         left:10,
                         }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Salvar</Text>
+                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Iniciar</Text>
              </TouchableOpacity>
             </View>
              
           </View> 
+
+
 {/* 
         <View style={{ alignItems:'center', flexDirection:'row', width:'100%'}}>
             <TouchableOpacity style={styles.finalizar}>
@@ -148,24 +129,10 @@ const styles = StyleSheet.create({
   
   project: {
       backgroundColor: '#EBEBEB',
-      width: 240,
+      width: 208,
       height:36,
       marginTop: 5,
       marginBottom: 5,
-      color: '#9E9E9E', 
-      fontSize: 15,
-      borderRadius: 7,
-      padding:10,
-      shadowOpacity:70,
-      textAlign: 'center',
-      top: 5,  
-   },
-
-   descricao:{
-    backgroundColor: '#EBEBEB',
-      width: 240,
-      height:120, 
-      marginBottom: 10,
       color: '#9E9E9E', 
       fontSize: 15,
       borderRadius: 7,
@@ -231,4 +198,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Ponto;
+export default NovaRota;

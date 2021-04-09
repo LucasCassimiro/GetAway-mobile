@@ -1,15 +1,25 @@
-import React, {useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+import {AuthContext} from '../contexts/authContext';
 
 function Recuperar({ navigation }) {
 
     const [email, setEmail] = useState('');
- 
-    const env = () => {
-    alert('O código de recuperação foi enviado ao email informado, confira a caixa de spam!')
-    navigation.navigate('Main');
-    }  
+
+    const {ResetPassword, ErrMsg} = useContext(AuthContext);
+
+    async function onClickRec(){
+      if(email.length == 0)
+        return;
+  
+      const verify = await ResetPassword(email);
+      
+      if(verify){
+        navigation.navigate('Main');
+        alert('O link para recuperação foi enviado ao email informado. Caso não encontre, verifique a caixa de Spam!')
+      }
+    }
 
   return (
     <>
@@ -20,11 +30,11 @@ function Recuperar({ navigation }) {
               style={styles.input}
               placeholder= "Digite seu email cadastrado"
               autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setEmail(text)} 
+              onChangeText={setEmail} 
               />
 
             <TouchableOpacity style={styles.codigo} 
-                onPress={()=>env()}>
+                onPress={async ()=> await onClickRec()}>
                     <Text style={
                         {color:'white', 
                         fontSize: 20, 

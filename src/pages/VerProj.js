@@ -1,57 +1,60 @@
-import React, {useState} from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component, useContext } from 'react';
+import { SafeAreaView, KeyboardAvoidingView, FlatList, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+import api from '../Services/api';
+
+ import {AuthContext} from '../contexts/authContext';
+import { firebase } from '@react-native-firebase/auth';
 
 export default function VerProj ({navigation}) {
-
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
   
-    const proj = () => {
-      navigation.navigate('MenuProjeto');
-    }
+    const [project, setProject] = useState([]);  
+    const { getIdToken,firebaseId,IdToken } = useContext(AuthContext);
 
+    useEffect(() => {
+      (async function getToken(){
+        const res = await getIdToken();   //exemplo de uso da getIdToken
+        console.log(res);
+      })();
+    }, []);
+    const config = { 
+      headers: {  
+          Authorization: `Bearer ${IdToken}` 
+      } 
+  };
+  const data = {
+    firebaseUID: firebaseId,
+  }
+
+   api.get('/Projects', data, config)
+  .then(async (response) => { 
+      setProject(response.data);
+  })
+  .catch(async (error) => { 
+     alert(error)
+  });
+
+    // useEffect (() => {
+    //     api.get('/Project').then(response => {
+    //     setProject(response.data);
+    //   })
+    //   .catch(error=> {
+    //     alert(error)
+    //   });
+    // }, [])
+    
   return (
       <KeyboardAvoidingView style={styles.background} >
-
-
-
-        <View style={{ alignItems:'center', 
-        flexDirection:'column', 
-        position:'absolute', 
-        top:20,
-        width:316, 
-        height: 100, 
-        backgroundColor:'#FF6B00', 
-        alignItems:'center'}}>
-            <TouchableOpacity onPress={()=>proj()} style={{
-                color:'#FF6B00', 
-                width:316, 
-                height:100, 
-                borderRadius:4,
-                marginBottom:10,}}>
-                <Text style={{color:'white', fontSize: 24, textAlign:'center', top:30,}}>Projeto 1</Text>
-            </TouchableOpacity>
-        </View> 
-        
-        <View style={{ alignItems:'center', 
-        flexDirection:'column', 
-        position:'absolute', 
-        top:140,
-        width:316, 
-        height:100, 
-        backgroundColor:'#FF6B00', 
-        alignItems:'center'}}>
-            <TouchableOpacity onPress={()=>proj()} style={{
-                color:'#FF6B00', 
-                width:316, 
-                height:100, 
-                borderRadius:4}}>
-                <Text style={{color:'white', fontSize: 24, textAlign:'center', top:30,}}>Projeto 2</Text>
-            </TouchableOpacity>
-        </View>             
-        
-      
+       
+        <SafeAreaView style={styles.container}>
+        <FlatList>        
+          data={project}
+          keyExtractor={project => project.id}
+          renderItem={({ item: project }) => (
+            <Text style={styles.projects}>{project.name}</Text>
+          )}
+        </FlatList>
+        </SafeAreaView>
 
       </KeyboardAvoidingView>
 
@@ -62,15 +65,6 @@ export default function VerProj ({navigation}) {
 
 const styles = StyleSheet.create({
 
-  // headerText: {
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   textAlign: 'center',
-  //   color: '#fff',
-  //   fontSize: 20,
-  //   fontWeight: 'bold',
-  // },
-
   background:{
       flex: 1,
       alignItems: 'center',
@@ -80,48 +74,12 @@ const styles = StyleSheet.create({
 
   container: {
       flex:1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      // width: '90%',
-      // paddingBottom: 70
-  },
-  input: {
-      backgroundColor: '#ebebeb',
-      width: 280,
-      height: 48,
-      marginBottom: 15,
-      color: '#222',
-      fontSize: 20,
-      borderRadius: 4,
-      padding:10,
-
   },
 
-  submitText:{
-      color: '#fff',
-      fontSize: 18
-  },
-
-  login: {
-    width: 280,
-    height: 48,
-    borderRadius: 15,
-    backgroundColor: '#FF6B00',
-    justifyContent: 'center',
-    marginBottom: 7,
-    marginTop: 10,
-
-  },
-
-  cadastro: {
-    width: 280,
-    height: 48,
-    borderRadius: 15,
-    backgroundColor: '#129BE8',
-    justifyContent: 'center',
-    
-    
-  },
-
+  projects: {
+    color:'#FF6B00',
+    fontSize: 20,
+  },  
+   
 })
 

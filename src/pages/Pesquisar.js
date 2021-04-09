@@ -1,22 +1,31 @@
-import React, {useState, Component } from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component } from 'react';
+import { View, KeyboardAvoidingView, Image, TextInput, 
+  TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
+import useLocation from '../Hooks/useLocation';
+import Geolocation from 'react-native-geolocation-service';
 
 
 function Pesquisar ({ navigation }) {
-
+  const [latitude, setLatitude] = useState(-20.3866452);	
+  const [longitude, setLongitude] = useState(-43.5033303);
+    // const [projeto, setProjeto] = useState('');  
+    const { coords, errorMsg } = useLocation();
     
     const [pesquisar, setPesquisar] = useState('');  
 
-    const voltar = () => {
-      navigation.navigate('Main') ;
+    const novo = () => {
+      navigation.navigate('Novo') ;
       }
   
     const pesq = () => {
       navigation.navigate('Main') ;
     }  
 
+    const menu = () => {
+      navigation.navigate('Menu') ;
+    }  
   return (
     <> 
     <KeyboardAvoidingView style={styles.background} >
@@ -26,16 +35,22 @@ function Pesquisar ({ navigation }) {
             
                       
         <MapView
-        style={styles.map}
-        loadingEnabled={true}
-        region={{
-        latitude: -20.3868374,
-        longitude: -43.5037862,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-        }}
-        >
-        </MapView>
+              showsUserLocation={true}		//destacando a localização do usuário no mapa
+     	 showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
+              toolbarEnabled={false}	//ocultando opções do google maps ao clicar em objetos do mapa
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',		
+              }}	// Fazendo com que o mapa ocupe a tela inteira
+              initialRegion={{
+                latitude,	//posição inicial do mapa
+                longitude,	//posição inicial do mapa
+                latitudeDelta: 0.015,  	//determina o zoom do mapa
+                longitudeDelta: 0.0121,	//determina o zoom do mapa
+                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+              }}
+            />
 
          
         <View style={{ flexDirection:'row', alignItems:'center', bottom: 230}}>    
@@ -59,7 +74,7 @@ function Pesquisar ({ navigation }) {
 
           <View style={{ flexDirection:'row', 
               position:'absolute', bottom:0,width:'100%', height: 50, backgroundColor:'#ff6b00'}}>              
-            <TouchableOpacity style={styles.menu} >
+            <TouchableOpacity style={styles.menu} onPress={()=>menu()} >
                   <Image style={{
                     width:40,
                     height:40,
@@ -70,11 +85,10 @@ function Pesquisar ({ navigation }) {
                 />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.novo}>
+              <TouchableOpacity style={styles.novo} onPress={()=>novo()}>
                   <Image style={{
                     width:40,
                     height:40,
-                    left: 120,
                     top: 5,
                 }}
                 source= {require('../../assets/novo.png')}
@@ -113,7 +127,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF',
       width: 260,
       height:40,
-      marginBottom: 15,
+      marginBottom: '60%',
       color: '#222',
       fontSize: 20,
       borderRadius: 7,
@@ -132,7 +146,14 @@ const styles = StyleSheet.create({
       backgroundColor: '#FF6B00',
       borderRadius: 100,
       marginLeft: 10,
-      marginBottom:15,
+      marginBottom: '60%',
+  },
+
+  novo: {
+    width:40,
+    height:40,
+    marginLeft:'35%',
+
   },
 
   map: {

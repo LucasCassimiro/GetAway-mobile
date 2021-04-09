@@ -1,20 +1,69 @@
-import React, {useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+import api from '../Services/api';
+
+import {AuthContext} from '../contexts/authContext';
+
 function Cadastro({ navigation }) {
+  const [nome, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConf, setPasswordConf] = useState('');
 
-  const voltar = () => {
-    navigation.navigate('Main') ;
+  const { SignUp, IdToken, getIdToken, firebaseId } = useContext(AuthContext);
+  
+  // useEffect(() => {
+  //   Clear();
+  //   if(UserInfo){
+  //     navigation.navigate('User')
+  //   }
+  // }, [UserInfo]);
+  useEffect(() => {
+    (async function getToken(){
+      const res = await getIdToken();   //exemplo de uso da getIdToken
+      // console.log(res);
+    })();
+  }, []);
+
+  async function onClickSignUp(){
+    if(password != passwordConf)
+      return;
+    if(password.length == 0)
+      return;
+    if(email.length == 0)
+      return;
+    
+    const result = await SignUp(email, password);
+    //console.log(result);
+
+    if(!result)
+      return;
+
+    if(result){
+      navigation.navigate('Main');
+      alert('Cadastro efetuado com sucesso!')
     }
-
-    const login = () => {
-    navigation.navigate('Main') ;
+    const config = { 
+      headers: {  
+          Authorization: `Bearer ${IdToken}` 
+      } 
+  };
+    const data = {
+      firebaseUID: firebaseId,
+      name: nome,
     }
   
-    const cadastrar = () => {
-    alert('Cadastro realizado com sucesso, faça seu login!');  
-    navigation.navigate('Main') ;
-    }
+     api.post('/User', data, config)
+    .then(async (response) => { 
+        setUser(response.data);
+        console.log(response.data);
+    })
+    .catch(async (error) => { 
+       alert(error)
+    });
+
+  }
 
 
   return (
@@ -30,31 +79,45 @@ function Cadastro({ navigation }) {
                 />
             </View>
 
+         
+
           <View style={styles.container}>
+          <TextInput
+              style={styles.input}
+              placeholder= "Nome"
+              autoCorrect= {false} 
+              value={nome}
+              onChangeText={setName}
+              />   
             <TextInput
               style={styles.input}
               placeholder= "Email"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setEmail(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              autoCorrect= {false} 
+              value={email}
+              onChangeText={setEmail} 
               />
 
             <TextInput
               style={styles.input}
+              secureTextEntry 
               placeholder= "Senha"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setSenha(text)}
+              autoCorrect= {false}
+              value={password}
+              onChangeText={setPassword}
               />
 
             <TextInput
               style={styles.input}
+              secureTextEntry 
               placeholder= "Confirmar senha"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setSenha(text)} 
+              autoCorrect= {false}
+              value={passwordConf}
+              onChangeText={setPasswordConf} 
               />
 
             <View style={{ flexDirection:'row', alignItems:'center'}}>
               
-                <TouchableOpacity style={styles.cadastro} onPress={()=>cadastrar()}>
+                <TouchableOpacity style={styles.cadastro} onPress={async ()=> await onClickSignUp()}>
                   <Text style={{color:'white', fontSize: 20, textAlign:'center'}}>Cadastrar</Text>
                 </TouchableOpacity>
            
@@ -88,13 +151,14 @@ const styles = StyleSheet.create({
       paddingBottom: 70
   },
   input: {
-      backgroundColor: '#ebebeb',
-      width: '90%',
-      marginBottom: 15,
-      color: '#222',
-      fontSize: 20,
-      borderRadius: 7,
-      padding:10
+    backgroundColor: '#ebebeb',
+    width: 280,
+    height: 40,
+    marginBottom: 10,
+    color: '#222',
+    fontSize: 20,
+    borderRadius: 4,
+    padding:10,
   },
   
   submitText:{
@@ -104,7 +168,7 @@ const styles = StyleSheet.create({
 
   cadastro: {
     width: 280,
-    height: 48,
+    height: 40,
     borderRadius: 15,
     backgroundColor: '#129BE8',
     justifyContent: 'center',

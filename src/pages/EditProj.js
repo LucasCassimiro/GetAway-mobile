@@ -1,77 +1,107 @@
-import React, {useState, Component } from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component } from 'react';
+import { View, KeyboardAvoidingView, Image, TextInput, 
+  TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
-
+import useLocation from '../Hooks/useLocation';
+import Geolocation from 'react-native-geolocation-service';
+import api from '../Services/api';
 
 function EditProj ({ navigation }) {
 
-    
-    const [projeto, setProjeto] = useState('');  
-    const [ponto, setPonto] = useState('');  
-    const [descricao, setDescricao] = useState(''); 
+  
+  const [latitude, setLatitude] = useState(-20.3866452);	
+  const [longitude, setLongitude] = useState(-43.5033303);
+ 
+    const { coords, errorMsg } = useLocation();  
+
+    const [project, setProject] = useState();  
+    const [point, setPoint] = useState([]);  
+    const [description, setDescription] = useState(''); 
+
+
+    async function updateProject (){
+      var response = await api.put('project', {
+        name: project,
+        });
+      setProject([project,response.data])
+     
+      var response = await api.put('point', {
+        name: point,
+        description: description,
+      });
+      setPoint([point,response.data])
+      alert('Edição salva com sucesso!')  
+      navigation.navigate('VerProj') ;
+    } 
 
     const cancelar = () => {
       navigation.navigate('VerProj') ;
       }
-  
-    const salvar = () => {
-      alert('Edição salva com sucesso!')  
-      navigation.navigate('VerProj') ;
-    }
 
-  return (
-    <> 
-    <KeyboardAvoidingView style={styles.background} >
+    return (
+   
+      <KeyboardAvoidingView style={styles.background}
+        behavior='height'
+      >
  
 
-      <View style={styles.container}>
+        <View style={styles.container}>
             
                       
-       <MapView
-         style={styles.map}
-         loadingEnabled={true}
-         region={{
-         latitude: -20.3868374,
-         longitude: -43.5037862,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-          }}
-          >
-        </MapView>
+          <MapView
+              showsUserLocation={true}		
+     	        showsMyLocationButton={false} 	
+              toolbarEnabled={false}
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',		
+              }}	
+              initialRegion={{
+                latitude,	//posição inicial do mapa
+                longitude,	//posição inicial do mapa
+                latitudeDelta: 0.015,  	//determina o zoom do mapa
+                longitudeDelta: 0.0121,	//determina o zoom do mapa
+                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+              }}
+            />
 
 
-        <View style={{ flexDirection:'column', 
+            <View style={{ flexDirection:'column', 
               position:'absolute', 
-              bottom:120,
-              width:288, 
-              height: 360, 
+              bottom:75,
+              width:280, 
+              height: 280, 
               backgroundColor:'white',
-               alignItems:'center',
+              alignItems:'center',
                borderRadius:7,}}>              
              <TextInput
               style={styles.project}
               placeholder= "Nome do projeto"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setProjeto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              autoCorrect= {false} 
+              value={project}
+              onChangeText={setProject} 
               />
 
              <TextInput
               style={styles.project}
               placeholder= "Ponto de interesse"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setPonto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              autoCorrect= {false} 
+              value={point}
+              onChangeText={setPoint} 
               />
 
              <TextInput
               style={styles.descricao}
               placeholder= "Descrição"
-              autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setDescricao(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              autoCorrect= {false} 
+              value={description}
+              onChangeText={setDescription} 
               />
             
-            <View style={{flexDirection: 'row', marginTop:40}}>
-            <TouchableOpacity onPress={()=>cancelar()}
+            <View style={{flexDirection: 'row', marginTop:10}}>
+              <TouchableOpacity onPress={()=>cancelar()}
                 style={{backgroundColor:'#3a3a3a', 
                         width:114,
                         height:36,
@@ -79,9 +109,9 @@ function EditProj ({ navigation }) {
                         right:10
                         }}>
                  <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Voltar</Text>
-             </TouchableOpacity>
+              </TouchableOpacity>
 
-             <TouchableOpacity onPress={()=>salvar()}
+             <TouchableOpacity onPress={updateProject}
                 style={{backgroundColor:'#FF6B00', 
                         width:114,
                         height:36,
@@ -89,7 +119,7 @@ function EditProj ({ navigation }) {
                         left:10,
                         }}>
                  <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Editar</Text>
-             </TouchableOpacity>
+              </TouchableOpacity>
             </View>
              
           </View> 
@@ -97,8 +127,6 @@ function EditProj ({ navigation }) {
       </View>
     
     </KeyboardAvoidingView>
-
-  </> 
 
   );
     
@@ -123,15 +151,15 @@ const styles = StyleSheet.create({
       backgroundColor: '#EBEBEB',
       width: 208,
       height:36,
-      marginTop: 15,
-      marginBottom: 15,
+      marginTop: 5,
+      marginBottom: 5,
       color: '#9E9E9E', 
       fontSize: 15,
       borderRadius: 7,
       padding:10,
       shadowOpacity:70,
       textAlign: 'center',
-      top: 20,  
+      top: 10,  
    },
 
    descricao:{
@@ -145,7 +173,7 @@ const styles = StyleSheet.create({
       padding:10,
       shadowOpacity:70,
       textAlign: 'center',
-      top: 20,  
+      top: 10,  
    },
   
   submitText:{
@@ -161,9 +189,7 @@ const styles = StyleSheet.create({
     bottom: 0
    },
 
-
-
-})
+  })
 
 export default EditProj;
 

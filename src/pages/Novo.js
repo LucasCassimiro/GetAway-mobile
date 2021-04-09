@@ -1,53 +1,117 @@
-import React, {useState, Component } from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component, useContext} from 'react';
+import { View, KeyboardAvoidingView, Image, TextInput, 
+  TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
+import useLocation from '../Hooks/useLocation';
+import Geolocation from 'react-native-geolocation-service';
+import api from '../Services/api';
+
+import {AuthContext} from '../contexts/authContext';
+import { firebase } from '@react-native-firebase/auth';
 
 
 function Novo ({ navigation }) {
+  const [latitude, setLatitude] = useState(-20.3866452);	
+  const [longitude, setLongitude] = useState(-43.5033303);	//utilizaremos estas duas variáveis (latitude e longitude) como posições padrão caso não seja possível obter a posição do usuário.
 
+  const { coords, errorMsg } = useLocation();
+  const { getIdToken, firebaseId, IdToken} = useContext(AuthContext);
+    const [project, setProject] = useState('');  
+
+    useEffect(() => {
+      (async function getToken(){
+        const res = await getIdToken();   //exemplo de uso da getIdToken
+        console.log(res);
+      })();
+    }, []);
+    const config = { 
+      headers: {  
+          Authorization: `Bearer ${IdToken}` 
+      } 
+  };
+  const data = {
+    firebaseUID: firebaseId,
+    name: project,
+    paths: [coords],
+    description: 'Descrição'
+  }
+  async function handleAddProject (){
+    api.post('/Projects', data, config)
+    .then(async (response) => { 
+        setProject(response.data);
+    })
+    .catch(async (error) => { 
+       alert(error)
+    });
+  }
+
+
+  // useEffect(() => {
+  //     (async function getToken(){
+  //       const res = await getIdToken();   //exemplo de uso da getIdToken
+  //       console.log(res);
+  //     })();
+  //   }, []);
     
-    const [projeto, setProjeto] = useState('');  
+  // async function handleAddProject (){
+  //   const response = await api.post('/Project', {
+  //     name: project,
+  //     firebaseUID: firebaseId, 
+
+  //   });
+
+  //   setProject([...project, response.data])
+  //   navigation.navigate('Rota');
+  // }
 
     const cancelar = () => {
       navigation.navigate('Mapa') ;
       }
   
-    const iniciar = () => {
-      navigation.navigate('Projeto') ;
-    }
+    // const iniciar = () => {
+    //   navigation.navigate('Rota') ;
+    // }
 
   return (
     <> 
-    <KeyboardAvoidingView style={styles.background} >
+    <KeyboardAvoidingView style={styles.background} 
+    behavior='height'
+    >
  
 
       <View style={styles.container}>
             
-                      
-       <MapView
-         style={styles.map}
-         loadingEnabled={true}
-         region={{
-         latitude: -20.3868374,
-         longitude: -43.5037862,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-          }}
-          >
-        </MapView>
+      <MapView
+              showsUserLocation={true}		//destacando a localização do usuário no mapa
+     	 showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
+              toolbarEnabled={false}	//ocultando opções do google maps ao clicar em objetos do mapa
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',		
+              }}	// Fazendo com que o mapa ocupe a tela inteira
+              initialRegion={{
+                latitude,	//posição inicial do mapa
+                longitude,	//posição inicial do mapa
+                latitudeDelta: 0.015,  	//determina o zoom do mapa
+                longitudeDelta: 0.0121,	//determina o zoom do mapa
+                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+              }}
+            />
 
 
         <View style={{ flexDirection:'column', 
-              position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>              
+              position:'absolute', bottom:200,width:270, height: 100, backgroundColor:'white', alignItems:'center', borderRadius:4,}}>              
              <TextInput
               style={styles.project}
               placeholder= "Nome do projeto"
               autoCorrect= {false} // desativar o corretor no momento da digitação
-              onChangeText={text=>setProjeto(text)} // salvar essa info em algum local. Pesquisar para saber mais sobre.
+              value = {project}
+              onChangeText={setProject} // salvar essa info em algum local. Pesquisar para saber mais sobre.
               />
             
-            <View style={{flexDirection: 'row', marginTop:70}}>
+            <View style={{flexDirection: 'row', marginTop:10}}>
             <TouchableOpacity onPress={()=>cancelar()}
                 style={{backgroundColor:'#3a3a3a', 
                         width:114,
@@ -58,7 +122,7 @@ function Novo ({ navigation }) {
                  <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
              </TouchableOpacity>
 
-             <TouchableOpacity onPress={()=>iniciar()}
+             <TouchableOpacity onPress={handleAddProject}
                 style={{backgroundColor:'#FF6B00', 
                         width:114,
                         height:36,
@@ -71,7 +135,7 @@ function Novo ({ navigation }) {
              
           </View> 
 
-
+{/* 
 
         <View style={{ alignItems:'center', flexDirection:'row', width:'100%'}}>
             <TouchableOpacity style={styles.finalizar}>
@@ -79,9 +143,9 @@ function Novo ({ navigation }) {
             </TouchableOpacity>
   
             <TouchableOpacity style={styles.adicionar}>
-                <Text style={{color:'white', fontSize: 15, top:12}}>Adicionar Ponto</Text>
+                <Text style={{color:'white', fontSize: 15, top:12}}>Adicionar Rota</Text>
             </TouchableOpacity>
-        </View>  
+        </View>   */}
          
       </View>
     
@@ -112,15 +176,15 @@ const styles = StyleSheet.create({
       backgroundColor: '#EBEBEB',
       width: 208,
       height:36,
-      marginTop: 15,
-      marginBottom: 15,
+      marginTop: 5,
+      marginBottom: 5,
       color: '#9E9E9E', 
       fontSize: 15,
       borderRadius: 7,
       padding:10,
       shadowOpacity:70,
       textAlign: 'center',
-      top: 20,  
+      top: 5,  
    },
   
   submitText:{

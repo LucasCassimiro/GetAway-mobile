@@ -1,12 +1,20 @@
-import React, {useState, Component } from 'react';
-import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, {useState, useEffect , Component, useContext} from 'react';
+import { View, KeyboardAvoidingView, Image, TextInput, 
+  TouchableOpacity, Text, StyleSheet, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
+import useLocation from '../Hooks/useLocation';
+import Geolocation from 'react-native-geolocation-service';
+
+// import {AuthContext} from '../contexts/authContext';
 
 
 function Mapa ({ navigation }) {
+  const [latitude, setLatitude] = useState(-20.3866452);	
+  const [longitude, setLongitude] = useState(-43.5033303);	//utilizaremos estas duas variáveis (latitude e longitude) como posições padrão caso não seja possível obter a posição do usuário.
+  const [currentRegion, setCurrentRegion] = useState(null);
+  const { coords, errorMsg } = useLocation();
 
-    
     const [pesquisar, setPesquisar] = useState('');  
 
     const menu = () => {
@@ -21,28 +29,42 @@ function Mapa ({ navigation }) {
       navigation.navigate('Novo');
       }
 
+      // function handleRegionChanged(region){
+      //   setCurrentRegion(region);
+      // }
+
   return (
     <> 
     <KeyboardAvoidingView style={styles.background} >
  
 
       <View style={styles.container}>
-            
-                      
-       <MapView
-         style={styles.map}
-         loadingEnabled={true}
-         region={{
-         latitude: -20.3868374,
-         longitude: -43.5037862,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-          }}
-          >
-        </MapView>
+        
+       
+        <MapView 
+              // onRegionChangeComplete={handleRegionChanged}
+              showsUserLocation={true}		//destacando a localização do usuário no mapa
+     	        showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
+              toolbarEnabled={false}	//ocultando opções do google maps ao clicar em objetos do mapa
+              style={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',		
+              }}	// Fazendo com que o mapa ocupe a tela inteira
+              initialRegion={{
+                latitude,	//posição inicial do mapa
+                longitude,	//posição inicial do mapa
+                latitudeDelta: 0.015,  	//determina o zoom do mapa
+                longitudeDelta: 0.0121,	//determina o zoom do mapa
+                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+              }}
+            />
+
 
           <View style={{ flexDirection:'row', 
-              position:'absolute', bottom:0,width:'100%', height: 50, backgroundColor:'#ff6b00'}}>              
+              position:'absolute', bottom:0,
+              left:0, right:0,
+              width:'100%', height: '6%', backgroundColor:'#ff6b00'}}>              
             
               <TouchableOpacity style={styles.menu} onPress={()=>menu()}>
                   <Image style={{
@@ -56,6 +78,16 @@ function Mapa ({ navigation }) {
                 />
               </TouchableOpacity>
                 
+              <TouchableOpacity style={styles.novo} onPress={()=>novo()}>
+                  <Image style={{
+                    width:40,
+                    height:40,
+                    top: 5,
+                }}
+                source= {require('../../assets/novo.png')}
+                />
+              </TouchableOpacity>
+
               <TouchableOpacity style={styles.lupa} onPress={()=>lupa()}>
                   <Image style={{
                     width:40,
@@ -66,15 +98,7 @@ function Mapa ({ navigation }) {
                 />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.novo} onPress={()=>novo()}>
-                  <Image style={{
-                    width:40,
-                    height:40,
-                    top: 5,
-                }}
-                source= {require('../../assets/novo.png')}
-                />
-              </TouchableOpacity>
+              
                 
           </View> 
          
@@ -138,7 +162,7 @@ const styles = StyleSheet.create({
    },
 
    lupa: {
-    left:265,
+     marginLeft:'34%',
      width:40,
      height:40,
    },
@@ -146,7 +170,7 @@ const styles = StyleSheet.create({
    novo: {
      width:40,
      height:40,
-     left: 80,
+     marginLeft:'35%',
      
    }
 

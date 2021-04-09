@@ -7,35 +7,36 @@ import useLocation from '../Hooks/useLocation';
 import {AuthContext} from '../contexts/authContext';
 
 
-function Sair ({ navigation }) {
+function Excluir ({ navigation }) {
   const [latitude, setLatitude] = useState(-20.3866452);	
   const [longitude, setLongitude] = useState(-43.5033303);	//utilizaremos estas duas variáveis (latitude e longitude) como posições padrão caso não seja possível obter a posição do usuário.
   const [currentRegion, setCurrentRegion] = useState(null);
-  const { coords, errorMsg } = useLocation(); 
+  const { coords, errorMsg } = useLocation();   
 
-  const {LogOut, Delete, UserInfo, getIdToken} = useContext(AuthContext);
+ const {LogOut, Delete, UserInfo, getIdToken} = useContext(AuthContext);
 
-    async function onClickSignOut(){
-      const res = await LogOut();
-  
-      if(res)
-        navigation.navigate('Main');
-      
+  async function onClickDelete(){
+   const responsee = await Delete();
+       
+    if(responsee)
+     navigation.navigate('Main');
+    else {
+      return;
     }
+} 
 
-    const cancelar = () => {
-      navigation.navigate('Menu') ;
-      }
-
-  return (
-    <> 
-    <KeyboardAvoidingView style={styles.background} >
+ const cancelar = () => {
+  navigation.navigate('Menu') ;
+}
+  
+    
+ return (
+ <> 
+  <KeyboardAvoidingView style={styles.background} >
  
-
-      <View style={styles.container}>
-            
-                      
-      <MapView 
+   <View style={styles.container}>
+                              
+   <MapView 
   // onRegionChangeComplete={handleRegionChanged}
      showsUserLocation={true}		//destacando a localização do usuário no mapa
      showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
@@ -55,42 +56,41 @@ function Sair ({ navigation }) {
    />
 
 
-        <View style={{ flexDirection:'column', 
-              position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>              
-             
-             <Text style={{color:'#9C9C9C', fontSize:20, textAlign:'center', top:30}}>
-                Tem certeza que deseja sair dessa conta ?
-             </Text>
+      <View style={{ flexDirection:'column', 
+        position:'absolute', bottom:229,width:288, height: 190, backgroundColor:'white', alignItems:'center'}}>                
+         <Text style={{color:'#9C9C9C', fontSize:20, textAlign:'center', top:30}}>
+           Tem certeza que deseja excluir essa conta ?
+          </Text>
             
-            <View style={{flexDirection: 'row', marginTop:70}}>
-            <TouchableOpacity onPress={()=>cancelar()}
-                style={{backgroundColor:'#3a3a3a', 
-                        width:114,
-                        height:36,
-                        borderRadius:4,
-                        right:10
-                        }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
-             </TouchableOpacity>
+       <View style={{flexDirection: 'row', marginTop:70}}>
+        <TouchableOpacity onPress={()=>cancelar()}
+          style={{backgroundColor:'#3a3a3a', 
+                  width:114,
+                  height:36,
+                  borderRadius:4,
+                  right:10
+                 }}>
+          <Text style={{color:'white', fontSize:20, textAlign:'center', top: 2}}>Cancelar</Text>
+        </TouchableOpacity>
 
-             <TouchableOpacity onPress={async ()=> await onClickSignOut()}
-                style={{backgroundColor:'#E30000', 
-                        width:114,
-                        height:36,
-                        borderRadius:4,
-                        left:10,
-                        }}>
-                 <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Sair</Text>
-             </TouchableOpacity>
-            </View>
-             
-          </View>
-        
+        <TouchableOpacity onPress={async ()=> await onClickDelete()}
+          style={{backgroundColor:'#E30000', 
+                  width:114,
+                  height:36,
+                  borderRadius:4,
+                  left:10,
+                 }}>
+           <Text style={{color:'white', fontSize:20, textAlign:'center', top:2}}>Excluir</Text>
+         </TouchableOpacity>
       </View>
+            
+      </View>
+        
+    </View>
     
-    </KeyboardAvoidingView>
+  </KeyboardAvoidingView>
 
-  </> 
+</> 
 
   );
     
@@ -119,13 +119,12 @@ const styles = StyleSheet.create({
     bottom: 0
    },
 
-   sair: {
+   excluir: {
     width:'100%',
-       height:48,
-       alignContent:'center',
-       top: 15,
+    height:48,
+    alignContent:'center',
+    top: 30,
    },
-
 })
 
-export default Sair;
+export default Excluir;
