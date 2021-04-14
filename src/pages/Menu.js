@@ -5,8 +5,8 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 import useLocation from '../Hooks/useLocation';
 import Geolocation from 'react-native-geolocation-service';
-
 import {AuthContext} from '../contexts/authContext';
+
 
 function Menu ({ navigation }) {
   const [latitude, setLatitude] = useState(-20.3866452);	
@@ -16,14 +16,9 @@ function Menu ({ navigation }) {
     
     const [pesquisar, setPesquisar] = useState('');  
 
-    const {LogOut, Delete, UserInfo, getIdToken} = useContext(AuthContext);
+    const {LogOut, Delete, firebaseId, getIdToken} = useContext(AuthContext);
 
-    // useEffect(() => {
-    //   (async function getToken(){
-    //     const res = await getIdToken();   //exemplo de uso da getIdToken
-    //     //console.log(res);
-    //   })();
-    // }, []);
+  
   
     async function onClickSignOut(){
       const res = await LogOut();
@@ -45,6 +40,7 @@ function Menu ({ navigation }) {
       navigation.navigate('VerProj') ;
       }  
 
+      
   return (
     <> 
     <KeyboardAvoidingView style={styles.background} >

@@ -8,7 +8,7 @@ import Geolocation from 'react-native-geolocation-service';
 import api from '../Services/api';
 
 import {AuthContext} from '../contexts/authContext';
-import { firebase } from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
 
 
 function Novo ({ navigation }) {
@@ -17,34 +17,74 @@ function Novo ({ navigation }) {
 
   const { coords, errorMsg } = useLocation();
   const { getIdToken, firebaseId, IdToken} = useContext(AuthContext);
-    const [project, setProject] = useState('');  
+  const [project, setProject] = useState('');  
 
-    useEffect(() => {
-      (async function getToken(){
-        const res = await getIdToken();   //exemplo de uso da getIdToken
-        console.log(res);
-      })();
-    }, []);
-    const config = { 
-      headers: {  
-          Authorization: `Bearer ${IdToken}` 
-      } 
-  };
-  const data = {
-    firebaseUID: firebaseId,
-    name: project,
-    paths: [coords],
-    description: 'Descrição'
+  async function handleAddProject(){
+      
+       const token = await getIdToken();
+       console.log('O token do firebase ',token);
+      if (token){
+        const IdToken = 'Bearer '.concat(token); 
+        // const IdToken = token;
+        const firebaseId = auth().currentUser.uid
+        navigation.navigate('Rota') ;
+      try {
+        
+        console.log('Entrei no try - Novo Projeto')
+        const response = await api.post('/Project', {
+          uid: firebaseId,
+          name: project,
+          description:'',
+          paths:[]
+        }, {
+          headers: { authorization: IdToken }
+        })
+        console.log('Sai - Novo Projeto');
+        console.log(response.data);
+        return true;
+      }
+      catch (error){
+        console.log(error)
+        return false;
+      }
+    }
   }
-  async function handleAddProject (){
-    api.post('/Projects', data, config)
-    .then(async (response) => { 
-        setProject(response.data);
-    })
-    .catch(async (error) => { 
-       alert(error)
-    });
-  }
+
+  // async function handleAddProject (){
+  //   api.post('/Projects', data, config)
+  //   .then(async (response) => { 
+  //       setProject(response.data);
+  //   })
+  //   .catch(async (error) => { 
+  //      alert(error)
+  //   });
+  //   const token = await getIdToken();
+  //   console.log('O token do firebase ',token);
+  //   if (token){
+  //    const IdToken = 'Bearer '.concat(token); 
+  //    // const IdToken = token;
+  //    const firebaseId = auth().currentUser.uid
+   
+  //  try {
+  //    console.log('Entrei no try')
+  //    const response = await api.post('/Project', {
+  //      uid: firebaseId,
+  //      name: project,
+  //      description:'',
+  //      paths:[]
+  //    }, {
+  //      headers: { authorization: IdToken }
+  //    })
+  //    console.log('Sai');
+  //    console.log(response.data);
+  //    return true;
+  //  }
+  //  catch (error){
+  //    console.log(error)
+  //    return false;
+  //  }
+  //   }
+  
 
 
   // useEffect(() => {

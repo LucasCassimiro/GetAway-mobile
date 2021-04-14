@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "985327946226",
-    "project_id": "getaway-309120",
-    "storage_bucket": "getaway-309120.appspot.com"
+    "project_number": "875583378584",
+    "project_id": "backend-unificado",
+    "storage_bucket": "backend-unificado.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:985327946226:android:992b8952e66f929425036b",
+        "mobilesdk_app_id": "1:875583378584:android:f0e97f6cc2dfdd0fc6aced",
         "android_client_info": {
           "package_name": "com.getaway3"
         }
       },
       "oauth_client": [
         {
-          "client_id": "985327946226-nfp5bpea8d9p6s7rh6hh66dv3js6qjib.apps.googleusercontent.com",
+          "client_id": "875583378584-sgcof2qbe9bm03o6aou9d80b2o0rjji6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjxT0VzkdDvNq4FJWT5P0liPnV1xw-2sU"
+          "current_key": "AIzaSyADJewDM9jZ32oh9X-IHva8ircWtvv3QCA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "985327946226-nfp5bpea8d9p6s7rh6hh66dv3js6qjib.apps.googleusercontent.com",
+              "client_id": "875583378584-sgcof2qbe9bm03o6aou9d80b2o0rjji6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

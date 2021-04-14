@@ -4,26 +4,16 @@ import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, S
 import api from '../Services/api';
 
 import {AuthContext} from '../contexts/authContext';
-import { firebase } from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
+
 
 export default function({navigation}){
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  const { SignIn, Clear , ErrMsg, getIdToken} = useContext(AuthContext);
+  const { SignIn, Clear , firebaseId, getIdToken, IdToken, User, setUser} = useContext(AuthContext);
 
-  useEffect(() => {
-    (async function getToken(){
-      const res = await getIdToken();   
-      //console.log(res);
-    })();
-  }, []);
-
-  useEffect(() => {
-    Clear();
-    console.log('Chamei o clear');
-  },[])
 
   async function onClickSignIn (){
     Clear();
@@ -31,7 +21,7 @@ export default function({navigation}){
     if(email.length == 0)
       return;
     
-    if(password.length == 0)
+     if(password.length == 0)
       return;  
 
       const result = await SignIn(email, password);
@@ -44,9 +34,38 @@ export default function({navigation}){
       if(result){
         navigation.navigate('Mapa');
       }  
-  }
+
+      const token = await getIdToken();
+      // console.log('O token do firebase aqui no login',token);
+
+     if (token){
+     const IdToken = 'Bearer '.concat(token); 
+     const firebaseId = auth().currentUser.uid
+     console.log('FirebaseUID', firebaseId)
+     try {
+     console.log('Entrei no try - Login')
+
+     const response = await api.get('/User', { headers: { authorization: IdToken, uid: firebaseId }
+     })
+ 
+     console.log(response.data);
+     setUser(response.data);
+     return true;
+     }
+     catch (error){
+     console.log(error)
+     return false;
+   }
+ }
+}
 
 
+  useEffect(() => {
+    Clear();
+    console.log('Chamei o clear');
+  },[])
+
+ 
   function cadastrar (){
     navigation.navigate('Cadastro');
   }
@@ -57,7 +76,6 @@ export default function({navigation}){
 
   return (
       <KeyboardAvoidingView 
-      // behavior='padding'
       style={styles.background} >
 
           <View style={styles.containerLogo}>
@@ -103,18 +121,7 @@ export default function({navigation}){
             <TouchableOpacity style={styles.recuperar} onPress={()=>recuperar()}>
                 <Text style = {{color:'black', textAlign:'center', marginTop:10}}>Recuperar senha</Text>
             </TouchableOpacity>
-{/*         
-            {
-        ErrMsg ?
-          <Text 
-            testId='signIn-info-text'
-            contentDesc='signIp-info-text'
-            value1={ErrMsg}
-          />
-        :
-          null
-      } */}
-           
+
         </View>
 
       </KeyboardAvoidingView>

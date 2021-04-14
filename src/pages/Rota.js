@@ -5,6 +5,8 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import { color } from 'react-native-reanimated';
 import useLocation from '../Hooks/useLocation';
 import Geolocation from 'react-native-geolocation-service';
+import {AuthContext} from '../contexts/authContext';
+import auth, { firebase } from '@react-native-firebase/auth';
 
 import api from '../Services/api';
 
@@ -37,7 +39,7 @@ function Rota ({ navigation }) {
 
       <MapView
               showsUserLocation={true}		//destacando a localização do usuário no mapa
-     	 showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
+     	        showsMyLocationButton={false} 	//ocultando o botão que move o mapa para a localização do usuário
               toolbarEnabled={false}	//ocultando opções do google maps ao clicar em objetos do mapa
               style={{
                 height: '100%',
@@ -49,10 +51,11 @@ function Rota ({ navigation }) {
                 longitude,	//posição inicial do mapa
                 latitudeDelta: 0.015,  	//determina o zoom do mapa
                 longitudeDelta: 0.0121,	//determina o zoom do mapa
-                ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
+                 ...coords	// Aqui sobrescrevemos as variáveis latitude e longitude com a posição do usuário obtida no hook que criamos para obter a localização.
               }}
             >
-              <Marker coordinate ={{latitude:coords.latitude, longitude:coords.longitude}}/> 
+              {/* { coords.latitude ? <Marker coordinate ={{latitude:coords.latitude, longitude:coords.longitude}}/> : null }
+              <Marker coordinate ={{latitude:coords.latitude, longitude:coords.longitude}}/>  */}
         </MapView>
        
  

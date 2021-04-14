@@ -135,7 +135,7 @@ const Routes =  createAppContainer(
         VerProj:{
             screen: VerProj,
             navigationOptions:{
-                title: 'Projeto',
+                title: 'Projetos',
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',
             },

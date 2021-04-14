@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [ErrMsg, setErrMsg] = useState('');
   const [UserInfo, setUserInfo] = useState(null);
   const [IdToken, setIdToken] = useState(null);
+  const [User, setUser] = useState(null);
 
   //pega o idToken e armazena no context, essa função deve ser chamada
   //sempre que for preciso utilizar o IdToken.
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   async function SignIn(email, password){
     var firebaseEmailReturn
     var firebaseIdReturn
-    // var tokenReturn
+    var tokenReturn
 
     //login no firebase
     const response = await auth().signInWithEmailAndPassword(email, password)
@@ -242,7 +243,9 @@ export const AuthProvider = ({ children }) => {
         getIdToken,
         setErrMsg,
         ChangePassword,
-        IdToken
+        IdToken,
+        User,
+        setUser
       }}
     >
       {children}

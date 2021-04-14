@@ -4,6 +4,7 @@ import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, S
 import api from '../Services/api';
 
 import {AuthContext} from '../contexts/authContext';
+import auth, { firebase } from '@react-native-firebase/auth';
 
 function Cadastro({ navigation }) {
   const [nome, setName] = useState('');
@@ -12,57 +13,51 @@ function Cadastro({ navigation }) {
   const [passwordConf, setPasswordConf] = useState('');
 
   const { SignUp, IdToken, getIdToken, firebaseId } = useContext(AuthContext);
-  
-  // useEffect(() => {
-  //   Clear();
-  //   if(UserInfo){
-  //     navigation.navigate('User')
-  //   }
-  // }, [UserInfo]);
-  useEffect(() => {
-    (async function getToken(){
-      const res = await getIdToken();   //exemplo de uso da getIdToken
-      // console.log(res);
-    })();
-  }, []);
 
+ 
   async function onClickSignUp(){
-    if(password != passwordConf)
-      return;
-    if(password.length == 0)
-      return;
-    if(email.length == 0)
-      return;
     
+    if(password != passwordConf)
+    return;
+    if(password.length == 0)
+    return;
+    if(email.length == 0)
+    return;
+  
     const result = await SignUp(email, password);
     //console.log(result);
 
     if(!result)
-      return;
+    return;
 
     if(result){
-      navigation.navigate('Main');
-      alert('Cadastro efetuado com sucesso!')
+    navigation.navigate('Main');
+    alert('Cadastro efetuado com sucesso!')
+      }
+       const token = await getIdToken();
+       console.log('O token do firebase ',token);
+      if (token){
+        const IdToken = 'Bearer '.concat(token); 
+        // const IdToken = token;
+        const firebaseId = auth().currentUser.uid
+      
+      try {
+        console.log('Entrei no try - cadastro')
+        const response = await api.post('/User', {
+          uid: firebaseId,
+          name: nome
+        }, {
+          headers: { authorization: IdToken }
+        })
+        console.log('Sai');
+        // console.log(response.data);
+        return true;
+      }
+      catch (error){
+        console.log(error)
+        return false;
+      }
     }
-    const config = { 
-      headers: {  
-          Authorization: `Bearer ${IdToken}` 
-      } 
-  };
-    const data = {
-      firebaseUID: firebaseId,
-      name: nome,
-    }
-  
-     api.post('/User', data, config)
-    .then(async (response) => { 
-        setUser(response.data);
-        console.log(response.data);
-    })
-    .catch(async (error) => { 
-       alert(error)
-    });
-
   }
 
 
