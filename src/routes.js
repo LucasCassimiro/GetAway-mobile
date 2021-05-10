@@ -162,7 +162,7 @@ const Routes =  createAppContainer(
         NovaRota:{  
             screen: NovaRota,
             navigationOptions:{
-                title: 'Projeto',
+                title: 'Nova Rota',
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',
             },
@@ -171,7 +171,7 @@ const Routes =  createAppContainer(
         Rota:{  
             screen: Rota,
             navigationOptions:{
-                title: 'Projeto',
+                title: 'Rota',
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',
             },

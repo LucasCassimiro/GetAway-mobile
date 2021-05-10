@@ -1,9 +1,9 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 import api from '../Services/api';
 
-import {AuthContext} from '../contexts/authContext';
+import { AuthContext } from '../contexts/authContext';
 import auth, { firebase } from '@react-native-firebase/auth';
 
 function Cadastro({ navigation }) {
@@ -14,33 +14,33 @@ function Cadastro({ navigation }) {
 
   const { SignUp, IdToken, getIdToken, firebaseId } = useContext(AuthContext);
 
- 
-  async function onClickSignUp(){
-    
-    if(password != passwordConf)
-    return;
-    if(password.length == 0)
-    return;
-    if(email.length == 0)
-    return;
-  
+
+  async function onClickSignUp() {
+
+    if (password != passwordConf)
+      return;
+    if (password.length == 0)
+      return;
+    if (email.length == 0)
+      return;
+
     const result = await SignUp(email, password);
     //console.log(result);
 
-    if(!result)
-    return;
+    if (!result)
+      return;
 
-    if(result){
-    navigation.navigate('Main');
-    alert('Cadastro efetuado com sucesso!')
-      }
-       const token = await getIdToken();
-       console.log('O token do firebase ',token);
-      if (token){
-        const IdToken = 'Bearer '.concat(token); 
-        // const IdToken = token;
-        const firebaseId = auth().currentUser.uid
-      
+    if (result) {
+      navigation.navigate('Main');
+      alert('Cadastro efetuado com sucesso!')
+    }
+    const token = await getIdToken();
+    console.log('O token do firebase ', token);
+    if (token) {
+      const IdToken = 'Bearer '.concat(token);
+      // const IdToken = token;
+      const firebaseId = auth().currentUser.uid
+
       try {
         console.log('Entrei no try - cadastro')
         const response = await api.post('/User', {
@@ -53,7 +53,7 @@ function Cadastro({ navigation }) {
         // console.log(response.data);
         return true;
       }
-      catch (error){
+      catch (error) {
         console.log(error)
         return false;
       }
@@ -62,88 +62,88 @@ function Cadastro({ navigation }) {
 
 
   return (
-    <> 
-    <KeyboardAvoidingView style={styles.background} >
-           
-          <View style={styles.containerLogo}>
-                <Image style={{
-                    width:100,
-                    height:115,
-                }}
-                source= {require('../../assets/logo2.png')}
-                />
-            </View>
+    <>
+      <KeyboardAvoidingView style={styles.background} >
 
-         
+        <View style={styles.containerLogo}>
+          <Image style={{
+            width: 100,
+            height: 115,
+          }}
+            source={require('../../assets/logo2.png')}
+          />
+        </View>
 
-          <View style={styles.container}>
+
+
+        <View style={styles.container}>
           <TextInput
-              style={styles.input}
-              placeholder= "Nome"
-              autoCorrect= {false} 
-              value={nome}
-              onChangeText={setName}
-              />   
-            <TextInput
-              style={styles.input}
-              placeholder= "Email"
-              autoCorrect= {false} 
-              value={email}
-              onChangeText={setEmail} 
-              />
+            style={styles.input}
+            placeholder="Nome"
+            autoCorrect={false}
+            value={nome}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            autoCorrect={false}
+            value={email}
+            onChangeText={setEmail}
+          />
 
-            <TextInput
-              style={styles.input}
-              secureTextEntry 
-              placeholder= "Senha"
-              autoCorrect= {false}
-              value={password}
-              onChangeText={setPassword}
-              />
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            placeholder="Senha"
+            autoCorrect={false}
+            value={password}
+            onChangeText={setPassword}
+          />
 
-            <TextInput
-              style={styles.input}
-              secureTextEntry 
-              placeholder= "Confirmar senha"
-              autoCorrect= {false}
-              value={passwordConf}
-              onChangeText={setPasswordConf} 
-              />
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            placeholder="Confirmar senha"
+            autoCorrect={false}
+            value={passwordConf}
+            onChangeText={setPasswordConf}
+          />
 
-            <View style={{ flexDirection:'row', alignItems:'center'}}>
-              
-                <TouchableOpacity style={styles.cadastro} onPress={async ()=> await onClickSignUp()}>
-                  <Text style={{color:'white', fontSize: 20, textAlign:'center'}}>Cadastrar</Text>
-                </TouchableOpacity>
-           
-            </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+            <TouchableOpacity accessibilityLabel='Cadastro' style={styles.cadastro} onPress={async () => await onClickSignUp()}>
+              <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>Cadastrar</Text>
+            </TouchableOpacity>
 
           </View>
-              
+
+        </View>
+
       </KeyboardAvoidingView>
-      </> 
+    </>
 
   );
 }
 
 const styles = StyleSheet.create({
- 
-    background:{
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#fff'
+
+  background: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff'
   },
-  containerLogo:{
-      flex:1,
-      justifyContent: 'center'
+  containerLogo: {
+    flex: 1,
+    justifyContent: 'center'
   },
   container: {
-      flex:1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '90%',
-      paddingBottom: 70
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    paddingBottom: 70
   },
   input: {
     backgroundColor: '#ebebeb',
@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: 20,
     borderRadius: 4,
-    padding:10,
+    padding: 10,
   },
-  
-  submitText:{
-      color: '#fff',
-      fontSize: 18
+
+  submitText: {
+    color: '#fff',
+    fontSize: 18
   },
 
   cadastro: {
@@ -167,9 +167,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#129BE8',
     justifyContent: 'center',
-    
+
   },
-  
+
 })
 
 export default Cadastro;

@@ -9,11 +9,13 @@ export const AuthProvider = ({ children }) => {
   const [UserInfo, setUserInfo] = useState(null);
   const [IdToken, setIdToken] = useState(null);
   const [User, setUser] = useState(null);
+  const [projects, setProjects] = useState('');
 
   //pega o idToken e armazena no context, essa função deve ser chamada
   //sempre que for preciso utilizar o IdToken.
   async function getIdToken(){
     const user = firebase.auth().currentUser
+
 
     if(user){
       const token = await auth().currentUser.getIdToken(true)
@@ -245,6 +247,8 @@ export const AuthProvider = ({ children }) => {
         ChangePassword,
         IdToken,
         User,
+        projects,
+        setProjects,
         setUser
       }}
     >
